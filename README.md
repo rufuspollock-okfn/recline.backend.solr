@@ -10,9 +10,11 @@ Part of the [Recline][] suite of data libraries.
 
 Get data from the API:
 
-    recline.Backend.Solr.query({
-      url: 'url-of-solr-endpoint'
-    })
+    // queryObj follow Recline query spec
+    // http://okfnlabs.org/recline/docs/models.html#query-structure
+    var queryObj = {q: 'abc', size: 20, from: 0};
+    var config = { url: 'url-of-solr-endpoint' };
+    recline.Backend.Solr.query(queryObj, config)
       .done(function(result) {
         // structure of result is below
         console.log(result);
