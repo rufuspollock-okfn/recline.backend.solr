@@ -12,12 +12,21 @@ this.recline.Backend.Solr = this.recline.Backend.Solr || {};
   //
   // dataset must have a solr or url attribute pointing to solr endpoint
   my.fetch = function(dataset) {
+    return my.query({}, dataset);
+  };
+
+  // TODO - much work on proper query support is needed!!
+  my.query = function(queryObj, dataset) {
+    var q = queryObj.q || '*:*';
+    var data = {
+      q: q,
+      rows: queryObj.size || 10,
+      start: queryObj.from || 0,
+      wt: 'json'
+    };
     var jqxhr = $.ajax({
       url: dataset.solr || dataset.url,
-      data: {
-        rows: 1,
-        wt: 'json'
-      },
+      data: data,
       dataType: 'jsonp',
       jsonp: 'json.wrf'
     });
@@ -32,33 +41,6 @@ this.recline.Backend.Solr = this.recline.Backend.Solr || {};
       }
       var out = {
         fields: fields,
-        total: results.response.numFound,
-        records: results.response.docs,
-        useMemoryStore: false
-      };
-      dfd.resolve(out);
-    });
-    return dfd.promise();
-  }
-
-  // TODO - much work on proper query support is needed!!
-  my.query = function(queryObj, dataset) {
-    var q = queryObj.q || '*:*';
-    var data = {
-      q: q,
-      rows: queryObj.size,
-      start: queryObj.from,
-      wt: 'json'
-    };
-    var jqxhr = $.ajax({
-      url: dataset.solr || dataset.url,
-      data: data,
-      dataType: 'jsonp',
-      jsonp: 'json.wrf'
-    });
-    var dfd = new Deferred();
-    jqxhr.done(function(results) {
-      var out = {
         total: results.response.numFound,
         records: results.response.docs
       };

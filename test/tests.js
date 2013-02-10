@@ -1,7 +1,7 @@
 (function ($) {
 module("Backend SOLR");
 
-test("fetch", function() { 
+test("query", function() { 
   var dataset = {
     url: 'http://openspending.org/api/search',
     backend: 'solr'
@@ -19,7 +19,8 @@ test("fetch", function() {
     };
   });
 
-  recline.Backend.Solr.fetch(dataset).done(function(result) {
+  var query = {};
+  recline.Backend.Solr.query(query, dataset).done(function(result) {
     var exp = [
       "_id",
       "amount",
